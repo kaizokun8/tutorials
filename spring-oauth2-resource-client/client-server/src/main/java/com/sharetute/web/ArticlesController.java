@@ -1,4 +1,4 @@
-package com.baeldung.web;
+package com.sharetute.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;

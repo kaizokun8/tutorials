@@ -1,4 +1,4 @@
-package com.baeldung.model;
+package com.sharetute.model;
 
 import javax.persistence.*;
 
