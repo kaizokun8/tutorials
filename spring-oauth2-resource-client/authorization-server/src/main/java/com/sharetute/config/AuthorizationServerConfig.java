@@ -40,6 +40,7 @@ import java.util.UUID;
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
 
+
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -48,7 +49,8 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
+    public RegisteredClientRepository registeredClientRepository(@Autowired JdbcTemplate jdbcTemplate,
+                                                                 @Autowired PasswordEncoder passwordEncoder) {
 
         JdbcRegisteredClientRepository clientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
 
@@ -90,19 +92,19 @@ public class AuthorizationServerConfig {
 
         return clientRepository;
     }
-
+/*
     @Bean
     public OAuth2AuthorizationService oAuth2AuthorizationService(
-            JdbcTemplate jdbcTemplate,
-            RegisteredClientRepository registeredClientRepository) {
+            @Autowired JdbcTemplate jdbcTemplate,
+            @Autowired RegisteredClientRepository registeredClientRepository) {
 
         return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
     }
-
+*/
     @Bean
     public OAuth2AuthorizationConsentService oAuth2AuthorizationConsentService(
-            JdbcTemplate jdbcTemplate,
-            RegisteredClientRepository registeredClientRepository) {
+            @Autowired JdbcTemplate jdbcTemplate,
+            @Autowired RegisteredClientRepository registeredClientRepository) {
 
         return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
     }
@@ -139,7 +141,7 @@ public class AuthorizationServerConfig {
     @Bean
     public ProviderSettings providerSettings() {
         return ProviderSettings.builder()
-                .issuer("http://auth-server:12001")
+                .issuer("http://localhost:12001")
                 .build();
     }
 
