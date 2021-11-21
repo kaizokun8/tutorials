@@ -31,4 +31,4 @@ spring:
             client-name: articles-client-authorization-code
         provider:
           spring:
-            issuer-uri: http://auth-server:12001
+            issuer-uri: http://localhost:12001
