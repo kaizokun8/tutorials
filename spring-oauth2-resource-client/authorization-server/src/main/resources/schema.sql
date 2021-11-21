@@ -1,5 +1,6 @@
-CREATE SCHEMA IF NOT EXISTS oauth2;
-use oauth2;
+DROP SCHEMA IF EXISTS spring_oauth;
+CREATE SCHEMA spring_oauth;
+use spring_oauth;
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -14,14 +15,14 @@ CREATE TABLE IF NOT EXISTS authorities
 (
     username  VARCHAR(255),
     authority VARCHAR(255),
-    primary key (username, authority),
-    foreign key (username) REFERENCES users (username)
+    primary key (username, authority)
 );
 
 CREATE TABLE IF NOT EXISTS authority
 (
+    id       bigint auto_increment,
     authority VARCHAR(255),
-    primary key (authority)
+    primary key (id)
 );
 
 CREATE TABLE IF NOT EXISTS oauth2_registered_client

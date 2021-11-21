@@ -1,4 +1,4 @@
-use oauth2;
+use spring_oauth;
 
 INSERT INTO users (username, password, enabled)
 VALUES ('john', '$2a$10$hn37faXn3NwbNecgVcmWiuD0q4cn7C.uCpGZfuzHqRV8lB7W7zz3y', 1);
