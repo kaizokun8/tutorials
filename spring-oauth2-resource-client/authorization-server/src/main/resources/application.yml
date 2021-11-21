@@ -27,7 +27,7 @@ spring:
     init:
       mode: always
   datasource:
-    url: jdbc:mysql://localhost:3306/spring_oauth?useSSL=true
+    url: jdbc:mysql://127.0.0.1:3306/spring_oauth?useSSL=true
     username: root
     password: FwYoB4Bwx38BPuI4
   jpa:

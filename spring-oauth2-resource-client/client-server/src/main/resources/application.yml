@@ -3,33 +3,32 @@ server:
 
 logging:
   level:
-    root: debug
-    org.springframework.web: debug
-    org.springframework.security: debug
-    org.springframework.security.oauth2: debug
+    root: info
+    org.springframework.web: info
+    org.springframework.security: info
+    org.springframework.security.oauth2: info
 
 spring:
   security:
     oauth2:
       client:
         registration:
-          client-oidc:
+          articles-client-oidc:
             provider: spring
-            client-id: client
+            client-id: articles-client
             client-secret: secret
             authorization-grant-type: authorization_code
             redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
             scope: openid
-            client-name: client-oidc
-          client-authorization-code:
+            client-name: articles-client-oidc
+          articles-client-authorization-code:
             provider: spring
-            client-id: client
+            client-id: articles-client
             client-secret: secret
             authorization-grant-type: authorization_code
             redirect-uri: "http://127.0.0.1:8080/authorized"
-            scope: read
-            client-name: client-authorization-code
+            scope: articles.read
+            client-name: articles-client-authorization-code
         provider:
           spring:
             issuer-uri: http://localhost:12001
-            #
