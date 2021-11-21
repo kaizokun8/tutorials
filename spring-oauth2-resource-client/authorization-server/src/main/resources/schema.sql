@@ -1,7 +1,7 @@
-CREATE SCHEMA IF NOT EXISTS oauth2;
+CREATE SCHEMA oauth2;
 use oauth2;
 
-CREATE TABLE IF NOT EXISTS users
+CREATE TABLE users
 (
     id       bigint auto_increment,
     username VARCHAR(255),
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users
     primary key (id)
 );
 
-CREATE TABLE IF NOT EXISTS authorities
+CREATE TABLE authorities
 (
     username  VARCHAR(255),
     authority VARCHAR(255),
@@ -18,13 +18,13 @@ CREATE TABLE IF NOT EXISTS authorities
     foreign key (username) REFERENCES users (username)
 );
 
-CREATE TABLE IF NOT EXISTS authority
+CREATE TABLE authority
 (
     authority VARCHAR(255),
     primary key (authority)
 );
 
-CREATE TABLE IF NOT EXISTS oauth2_registered_client
+CREATE TABLE oauth2_registered_client
 (
     id                            varchar(100)                            NOT NULL,
     client_id                     varchar(100)                            NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS oauth2_registered_client
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS oauth2_authorization
+CREATE TABLE oauth2_authorization
 (
     id                            varchar(100) NOT NULL,
     registered_client_id          varchar(100) NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS oauth2_authorization
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS oauth2_authorization_consent
+CREATE TABLE oauth2_authorization_consent
 (
     registered_client_id varchar(100)  NOT NULL,
     principal_name       varchar(200)  NOT NULL,
