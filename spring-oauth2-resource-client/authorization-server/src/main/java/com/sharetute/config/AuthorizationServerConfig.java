@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -27,8 +28,10 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.oauth2.server.authorization.config.TokenSettings;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.sql.DataSource;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -39,6 +42,11 @@ import java.util.UUID;
 
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -108,6 +116,19 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
+    UserDetailsService users(DataSource dataSource) {
+
+        return new JdbcUserDetailsManager(dataSource);
+    }
+
+    @Bean
+    public ProviderSettings providerSettings() {
+        return ProviderSettings.builder()
+                .issuer("http://auth-server:12001")
+                .build();
+    }
+
+    @Bean
     public JWKSource<SecurityContext> jwkSource() {
         RSAKey rsaKey = generateRsa();
         JWKSet jwkSet = new JWKSet(rsaKey);
@@ -136,24 +157,5 @@ public class AuthorizationServerConfig {
         return keyPair;
     }
 
-    @Bean
-    public ProviderSettings providerSettings() {
-        return ProviderSettings.builder()
-                .issuer("http://auth-server:12001")
-                .build();
-    }
-
-    public static void main(String[] args) {
-
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-        String raw = "secret";
-
-        String encoded = passwordEncoder.encode(raw);
-
-        passwordEncoder.matches(raw, encoded);
-
-        System.out.println(encoded);
-    }
 
 }

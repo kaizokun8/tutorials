@@ -17,13 +17,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class DefaultSecurityConfig {
 
-    @Autowired
-    private DataSource dataSource;
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -38,10 +31,5 @@ public class DefaultSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    UserDetailsService users() {
-
-        return new JdbcUserDetailsManager(this.dataSource);
-    }
 
 }
