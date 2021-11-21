@@ -27,7 +27,7 @@ spring:
             client-secret: secret
             authorization-grant-type: authorization_code
             redirect-uri: "http://127.0.0.1:8080/authorized"
-            scope: read,write,admin
+            scope: read
             client-name: client-authorization-code
         provider:
           spring:
