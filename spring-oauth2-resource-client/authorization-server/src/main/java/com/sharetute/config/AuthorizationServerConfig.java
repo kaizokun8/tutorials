@@ -139,7 +139,7 @@ public class AuthorizationServerConfig {
     @Bean
     public ProviderSettings providerSettings() {
         return ProviderSettings.builder()
-                .issuer("http://auth-server:12001")
+                .issuer("http://localhost:12001")
                 .build();
     }
 
