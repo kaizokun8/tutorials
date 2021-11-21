@@ -17,7 +17,8 @@ public class ArticlesController {
 
     @GetMapping(value = {"/", "/articles"})
     public String[] getArticles(
-            @RegisteredOAuth2AuthorizedClient("articles-client-authorization-code") OAuth2AuthorizedClient authorizedClient
+            @RegisteredOAuth2AuthorizedClient("client-authorization-code")
+                    OAuth2AuthorizedClient authorizedClient
     ) {
         return this.webClient
                 .get()
@@ -26,5 +27,17 @@ public class ArticlesController {
                 .retrieve()
                 .bodyToMono(String[].class)
                 .block();
+    }
+
+    @GetMapping(value = "/token")
+    public String getToken(@RegisteredOAuth2AuthorizedClient("client-authorization-code")
+                                   OAuth2AuthorizedClient authorizedClient) {
+
+        System.out.println("name : " + authorizedClient.getPrincipalName());
+        System.out.println("token type : " + authorizedClient.getAccessToken().getTokenType().getValue());
+        System.out.println("token value : " + authorizedClient.getAccessToken().getTokenValue());
+        authorizedClient.getAccessToken().getScopes().forEach(scope -> System.out.println("scope : " + scope));
+
+        return authorizedClient.getAccessToken().getTokenValue();
     }
 }
