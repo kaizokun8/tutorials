@@ -22,6 +22,8 @@ logging:
 spring:
   sql:
     init:
+      #always initialized with schema.sql and data.sql, all tables are dropped
+      #if they already exist
       mode: always
   h2:
     console:
