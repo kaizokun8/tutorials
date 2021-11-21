@@ -32,3 +32,4 @@ spring:
         provider:
           spring:
             issuer-uri: http://localhost:12001
+            #
