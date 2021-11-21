@@ -3,18 +3,6 @@ server:
 
 logging:
   level:
-    root: info
-    org.springframework.web: info
-    org.springframework.security: info
-    org.springframework.security.oauth2: info
-    org:
-      hibernate:
-        cache: info
-        SQL: trace
-        type:
-          descriptor:
-            sql:
-              BasicBinder: trace
     jdbc:
       sqlonly: fatal
       resultsettable: info
@@ -22,24 +10,33 @@ logging:
       audit: fatal
       resultset: fatal
       connection: fatal
+    org:
+      springframework: debug
+      hibernate:
+        cache: info
+        SQL: trace
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
 spring:
   sql:
     init:
-      mode: embedded
+      mode: always
   h2:
     console:
       enabled: true
-      #accessible via http://localhost:<server.port>/<server.servlet.context-path>/h2
       path: /h2
   datasource:
-    url: jdbc:h2:mem:oauth2
+    #h2 with a file, on windows C:\Users\username\h2 databases
+    url: jdbc:h2:file:~/h2 databases/oauth2;IGNORECASE=TRUE;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
     password: password
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
       show-sql: true
     properties:
       hibernate:
