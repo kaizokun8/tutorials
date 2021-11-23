@@ -1,8 +1,11 @@
 package com.sharetute.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -36,6 +39,7 @@ public class ArticlesController {
         System.out.println("name : " + authorizedClient.getPrincipalName());
         System.out.println("token type : " + authorizedClient.getAccessToken().getTokenType().getValue());
         System.out.println("token value : " + authorizedClient.getAccessToken().getTokenValue());
+
         authorizedClient.getAccessToken().getScopes().forEach(scope -> System.out.println("scope : " + scope));
 
         return authorizedClient.getAccessToken().getTokenValue();
