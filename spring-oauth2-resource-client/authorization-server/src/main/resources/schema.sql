@@ -1,7 +1,7 @@
-CREATE SCHEMA oauth2;
-use oauth2;
+CREATE SCHEMA OAUTH2;
+use OAUTH2;
 
-CREATE TABLE users
+CREATE TABLE USERS
 (
     id       bigint auto_increment,
     username VARCHAR(255),
@@ -10,7 +10,7 @@ CREATE TABLE users
     primary key (id)
 );
 
-CREATE TABLE authorities
+CREATE TABLE AUTHORITIES
 (
     username  VARCHAR(255),
     authority VARCHAR(255),
@@ -18,13 +18,13 @@ CREATE TABLE authorities
     foreign key (username) REFERENCES users (username)
 );
 
-CREATE TABLE authority
+CREATE TABLE AUTHORITY
 (
     authority VARCHAR(255),
     primary key (authority)
 );
 
-CREATE TABLE oauth2_registered_client
+CREATE TABLE OAUTH2_REGISTERED_CLIENT
 (
     id                            varchar(100)                            NOT NULL,
     client_id                     varchar(100)                            NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE oauth2_registered_client
     PRIMARY KEY (id)
 );
 
-CREATE TABLE oauth2_authorization
+CREATE TABLE OAUTH2_AUTHORIZATION
 (
     id                            varchar(100) NOT NULL,
     registered_client_id          varchar(100) NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE oauth2_authorization
     PRIMARY KEY (id)
 );
 
-CREATE TABLE oauth2_authorization_consent
+CREATE TABLE OAUTH2_AUTHORIZATION_CONSENT
 (
     registered_client_id varchar(100)  NOT NULL,
     principal_name       varchar(200)  NOT NULL,

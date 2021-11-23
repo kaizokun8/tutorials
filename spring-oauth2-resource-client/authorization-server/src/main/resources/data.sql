@@ -1,12 +1,12 @@
-use oauth2;
+use OAUTH2;
 
-INSERT INTO users (username, password, enabled)
+INSERT INTO USERS (username, password, enabled)
 VALUES ('john', '$2a$10$hn37faXn3NwbNecgVcmWiuD0q4cn7C.uCpGZfuzHqRV8lB7W7zz3y', 1);
 
-INSERT INTO authorities (username, authority)
+INSERT INTO AUTHORITIES (username, authority)
 VALUES ('john', 'ROLE_USER');
 
-INSERT INTO authority (authority)
+INSERT INTO AUTHORITY (authority)
 VALUES ('ROLE_USER'),
        ('ROLE_ADMIN'),
        ('ROLE_SUPER_ADMIN'),
