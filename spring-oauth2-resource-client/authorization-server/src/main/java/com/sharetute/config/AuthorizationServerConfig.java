@@ -16,6 +16,10 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -30,18 +34,26 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.oauth2.server.authorization.config.TokenSettings;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.sql.DataSource;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -51,47 +63,67 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
+    UserDetailsService users(DataSource dataSource, PasswordEncoder passwordEncoder) {
+
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+
+        if(!jdbcUserDetailsManager.userExists("john")) {
+
+            UserDetails userDetails = new User("john",
+                    passwordEncoder.encode("password"),
+                    List.of(new SimpleGrantedAuthority("ROLE_USER")));
+
+            jdbcUserDetailsManager.createUser(userDetails);
+        }
+
+        return jdbcUserDetailsManager;
+    }
+
+    @Bean
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
 
         JdbcRegisteredClientRepository clientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
 
-        RegisteredClientParametersMapper registeredClientParametersMapper = new RegisteredClientParametersMapper();
+        if (clientRepository.findByClientId("client") == null) {
 
-        registeredClientParametersMapper.setPasswordEncoder(passwordEncoder);
+            RegisteredClientParametersMapper registeredClientParametersMapper = new RegisteredClientParametersMapper();
 
-        clientRepository.setRegisteredClientParametersMapper(registeredClientParametersMapper);
+            registeredClientParametersMapper.setPasswordEncoder(passwordEncoder);
 
-        RegisteredClient registeredClient =
-                RegisteredClient
-                        .withId(UUID.randomUUID().toString())
-                        .clientId("client")
-                        .clientSecret("secret")
-                        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                        .authorizationGrantType(AuthorizationGrantType.PASSWORD)
-                        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                        .redirectUri("http://127.0.0.1:8080/login/oauth2/code/client-oidc")
-                        .redirectUri("http://127.0.0.1:8080/authorized")
-                        .scope(OidcScopes.OPENID)
-                        .scope("read")
-                        .scope("write")
-                        .scope("admin")
-                        .clientIdIssuedAt(Instant.now())
-                        //.clientSecretExpiresAt(Instant.now().plus(180, ChronoUnit.DAYS))
-                        .clientSettings(ClientSettings.builder()
-                                .requireAuthorizationConsent(true)
-                                .requireProofKey(false)
-                                .build())
-                        .tokenSettings(TokenSettings.builder()
-                                .accessTokenTimeToLive(Duration.ofSeconds(300))
-                                .refreshTokenTimeToLive(Duration.ofSeconds(3600))
-                                .reuseRefreshTokens(true)
-                                .idTokenSignatureAlgorithm(SignatureAlgorithm.ES256)
-                                .build())
-                        .build();
+            clientRepository.setRegisteredClientParametersMapper(registeredClientParametersMapper);
 
-        clientRepository.save(registeredClient);
+            RegisteredClient registeredClient =
+                    RegisteredClient
+                            .withId(UUID.randomUUID().toString())
+                            .clientId("client")
+                            .clientSecret("secret")
+                            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                            .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                            .authorizationGrantType(AuthorizationGrantType.PASSWORD)
+                            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                            .redirectUri("http://127.0.0.1:8080/login/oauth2/code/client-oidc")
+                            .redirectUri("http://127.0.0.1:8080/authorized")
+                            .scope(OidcScopes.OPENID)
+                            .scope("read")
+                            .scope("write")
+                            .scope("admin")
+                            .clientIdIssuedAt(Instant.now())
+                            //.clientSecretExpiresAt(Instant.now().plus(180, ChronoUnit.DAYS))
+                            .clientSettings(ClientSettings.builder()
+                                    .requireAuthorizationConsent(true)
+                                    .requireProofKey(false)
+                                    .build())
+                            .tokenSettings(TokenSettings.builder()
+                                    .accessTokenTimeToLive(Duration.ofSeconds(300))
+                                    .refreshTokenTimeToLive(Duration.ofSeconds(3600))
+                                    .reuseRefreshTokens(true)
+                                    .idTokenSignatureAlgorithm(SignatureAlgorithm.ES256)
+                                    .build())
+                            .build();
+
+            clientRepository.save(registeredClient);
+        }
 
         return clientRepository;
     }

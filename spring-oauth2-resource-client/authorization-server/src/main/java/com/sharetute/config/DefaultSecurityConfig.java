@@ -22,10 +22,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class DefaultSecurityConfig {
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -38,32 +34,6 @@ public class DefaultSecurityConfig {
                 .headers().frameOptions().disable();
 
         return http.build();
-    }
-/*
-    // @formatter:off
-    @Bean
-    UserDetailsService users() {
-        UserDetails user = User.builder()
-                .username("user")
-                .password("$2a$10$uOmmclnyUaQqv4ZfDMHcluhbF9ffK1IKjhXhJAXz0vD/Fus.AHYDO")
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(user);
-    }
-    // @formatter:on
-*/
-    @Bean
-    UserDetailsService users(DataSource dataSource, PasswordEncoder passwordEncoder) {
-
-        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-
-        UserDetails userDetails = new User("john",
-                passwordEncoder.encode("password"),
-                List.of(new SimpleGrantedAuthority("ROLE_USER")));
-
-        jdbcUserDetailsManager.createUser(userDetails);
-
-        return jdbcUserDetailsManager;
     }
 
 }
