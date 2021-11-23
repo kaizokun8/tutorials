@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
@@ -143,11 +146,28 @@ public class AuthorizationServerConfig {
                 .build();
     }
 
+    @Bean
+    public EmbeddedDatabase embeddedDatabase() {
+        // @formatter:off
+        return new EmbeddedDatabaseBuilder()
+                //.generateUniqueName(true)
+                .setName("oauth2")
+                .setType(EmbeddedDatabaseType.H2)
+                .setScriptEncoding("UTF-8")
+                .addScript("classpath:oauth2-authorization-schema.sql")
+                .addScript("classpath:oauth2-authorization-consent-schema.sql")
+                .addScript("classpath:oauth2-registered-client-schema.sql")
+                .addScript("classpath:oauth2-user-authority-schema.sql")
+                //.addScript("classpath:data.sql")
+                .build();
+        // @formatter:on
+    }
+
     public static void main(String[] args) {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        String raw = "secret";
+        String raw = "password";
 
         String encoded = passwordEncoder.encode(raw);
 
