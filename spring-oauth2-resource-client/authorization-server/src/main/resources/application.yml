@@ -3,10 +3,10 @@ server:
 
 logging:
   level:
-    root: debug
-    org.springframework.web: debug
-    org.springframework.security: debug
-    org.springframework.security.oauth2: debug
+    root: info
+    org.springframework.web: info
+    org.springframework.security: info
+    org.springframework.security.oauth2: info
     org:
       hibernate:
         cache: info
@@ -23,12 +23,22 @@ logging:
       resultset: fatal
       connection: fatal
 spring:
+  sql:
+    init:
+      mode: embedded
   h2:
     console:
       enabled: true
       #accessible via http://localhost:<server.port>/<server.servlet.context-path>/h2.
       path: /h2
+  datasource:
+    url: jdbc:h2:mem:oauth2
+    #url: jdbc:h2:mem:oauth2;IGNORECASE=TRUE;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: none
       show-sql: true
@@ -36,3 +46,6 @@ spring:
       hibernate:
         #! identation des requetes dans le log
         format_sql: true
+        hbm2ddl:
+          #allow sql insert with multiple lines into import.sql
+          import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
