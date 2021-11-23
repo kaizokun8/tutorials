@@ -3,7 +3,7 @@ server:
 
 logging:
   level:
-    root: error
+    root: debug
     org.springframework.web: debug
     org.springframework.security: debug
     org.springframework.security.oauth2: debug
@@ -23,16 +23,12 @@ logging:
       resultset: fatal
       connection: fatal
 spring:
-  sql:
-    init:
-      mode: always
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/spring_oauth?useSSL=true
-    username: root
-    password: FwYoB4Bwx38BPuI4
+  h2:
+    console:
+      enabled: true
+      #accessible via http://localhost:<server.port>/<server.servlet.context-path>/h2.
+      path: /h2
   jpa:
-    #initialize from resources after hibernate
-    #defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
       show-sql: true
@@ -40,6 +36,3 @@ spring:
       hibernate:
         #! identation des requetes dans le log
         format_sql: true
-        hbm2ddl:
-          #allow sql insert with multiple lines into import.sql
-          import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
