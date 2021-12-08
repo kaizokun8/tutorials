@@ -4,7 +4,6 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -183,6 +182,7 @@ public class AuthorizationServerConfig {
     @Bean
     public EmbeddedDatabase embeddedDatabase() {
         // @formatter:off
+
         return new EmbeddedDatabaseBuilder()
                 //.generateUniqueName(true)
                 .setName("oauth2")
@@ -192,7 +192,7 @@ public class AuthorizationServerConfig {
                 .addScript("classpath:oauth2-authorization-consent-schema.sql")
                 .addScript("classpath:oauth2-registered-client-schema.sql")
                 .addScript("classpath:oauth2-user-authority-schema.sql")
-                //.addScript("classpath:data.sql")
+                .addScript("classpath:oauth2-user-authority-data.sql")
                 .build();
         // @formatter:on
     }
