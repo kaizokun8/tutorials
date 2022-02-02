@@ -95,6 +95,7 @@ public class AuthorizationServerConfig {
                     RegisteredClient
                             .withId(UUID.randomUUID().toString())
                             .clientId("client")
+                            .clientName("client")
                             .clientSecret("secret")
                             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)

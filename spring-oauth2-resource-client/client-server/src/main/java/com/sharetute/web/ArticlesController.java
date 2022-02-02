@@ -39,6 +39,7 @@ public class ArticlesController {
         System.out.println("name : " + authorizedClient.getPrincipalName());
         System.out.println("token type : " + authorizedClient.getAccessToken().getTokenType().getValue());
         System.out.println("token value : " + authorizedClient.getAccessToken().getTokenValue());
+        System.out.println("refresh token value : " + authorizedClient.getRefreshToken().getTokenValue());
 
         authorizedClient.getAccessToken().getScopes().forEach(scope -> System.out.println("scope : " + scope));
 
